@@ -5,20 +5,29 @@ B4A=true
 @EndOfDesignText@
 #Region  Activity Attributes 
 	#FullScreen: False
-	#IncludeTitle: True
+	#IncludeTitle: False
 #End Region
 
 Sub Process_Globals
-	Dim ad1,ad2 As Timer
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
 End Sub
 
 Sub Globals
-	Dim ph As Phone
-	Dim b1,b2,b3 As Button
-	Dim Banner As AdView
-	Dim Interstitial As InterstitialAd
-	Dim lb As Label
-	Dim mm As Typeface : mm = mm.LoadFromAssets("Ghost.ttf")
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Dim tb As Label
+	Dim share,About As Button
+	Dim sbg,abg As BitmapDrawable
+	Dim mm As Typeface : mm = mm.LoadFromAssets("ghost.ttf")
+	Dim td As Label
+	
+	Dim b1,b2,b3,b4 As Button
+	Dim b1bg,b2bg,b3bg,b4bg As ColorDrawable
+	
+	Dim B As AdView
+	Dim I As InterstitialAd
 	
 	Dim ml As MLfiles
 	Dim sdroot As String
@@ -26,62 +35,97 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	'Activity.LoadLayout("Layout1")
+	Activity.Color = Colors.White
+	tb.Initialize("")
+	tb.Color = Colors.rgb(103, 58, 183)
+	tb.Text = "Xiaomi[MIUI]"
+	tb.TextColor = Colors.White
+	tb.TextSize = 20
+	tb.Gravity = Gravity.CENTER
+	tb.Typeface = Typeface.DEFAULT_BOLD
+	Activity.AddView(tb,0%x,0%y,100%x,55dip)
 	
-	lb.Initialize("lb")
-	lb.Gravity = Gravity.CENTER
-	lb.Text = "	Install ကိုနွိပ္ျပီး ေဖာင့္ေရြးထည့္ေပးပါ။ ျပီးရင္ေအာက္ပါ Change Font ကိုနွိပ္ျပီး System Font မွာ Myanmar Ghost Font ကိုေရြးေပးလိုက္ပါ။ သို့မဟုတ္ Theme ထဲက Font မွာ Myanmar Ghost Font ကိုေရြးျပီး Apply ေပးပါ။ နဂိုမူလေဖာင့္ကိုျပန္ထားခ်င္ရင္ Change Font ကိုနွိပ္ျပီး Default ကိုျပန္ေရြးထားနိုင္ပါတယ္။"
-	Activity.AddView(lb,2%x,1%y,90%x,35%y)
-	lb.Typeface = mm
-
-	Activity.Title = "Xiaomi[MIUI]"
-	ph.SetScreenOrientation(1)
-
+	About.Initialize("about")
+	abg.Initialize(LoadBitmap(File.DirAssets,"about.png"))
+	About.Background = abg
+	About.Gravity = Gravity.FILL
+	Activity.AddView(About,10dip,12.5dip,30dip,30dip)
+	
+	share.Initialize("share")
+	sbg.Initialize(LoadBitmap(File.DirAssets,"share.png"))
+	share.Background = sbg
+	share.Gravity = Gravity.FILL
+	Activity.AddView(share,100%x-40dip,12.5dip,30dip,30dip)
+	
+	td.Initialize("")
+	td.Text = "*ထည့္သြင္းမည္* ကိုနွိပ္ပါ။ ျပီးရင္ေအာက္ပါ *ေဖာင့္ေျပာင္းမည္* ကိုနွိပ္ျပီး System Font မွာ Myanmar Ghost Font ကိုေရြးေပးလိုက္ပါ။ သို့မဟုတ္ Theme ထဲက Font မွာ Myanmar Ghost Font ကိုေရြးျပီး Apply ေပးလိုက္ပါ။ နဂိုမူလေဖာင့္ကိုျပန္ထားခ်င္ရင္ *ေဖာင့္ေျပာင္းမည္* ကိုနွိပ္ျပီး Default ကိုျပန္ေရြးထားနိုင္ပါတယ္။"
+	td.Gravity = Gravity.CENTER
+	td.Typeface = mm
+	td.TextSize = 15
+	td.TextColor = Colors.Black
+	Activity.AddView(td,0%x,62dip,100%x,170dip)
+	
+	b1bg.Initialize(Colors.rgb(0, 150, 136),15)
 	b1.Initialize("b1")
-	b1.Text = "Install"
-	b1.Gravity = Gravity.CENTER
-	Activity.AddView(b1,20%x,(lb.Height+lb.Top)+1%y,60%x,10%y)
-
-	b2.Initialize("b2")
-	b2.Text = "Change Font"
-	b2.Gravity = Gravity.CENTER
-	Activity.AddView(b2,20%x,(b1.Top+b1.Height)+1%y,60%x,10%y)
-
-	b3.Initialize("b3")
-	b3.Text = "Tutorial"
-	b3.Gravity = Gravity.CENTER
-	Activity.AddView(b3,20%x,(b2.Top+b2.Height)+1%y,60%x,10%y)
+	b1.TextSize = 15
+	b1.Text = "ထည့္သြင္းမည္"
+	b1.Typeface = mm
+	b1.Background = b1bg
+	Activity.AddView(b1,50%x-100dip,td.Height+td.Top+7dip,200dip,50dip)
 	
-	Banner.Initialize2("Banner","ca-app-pub-4173348573252986/9974781358",Banner.SIZE_SMART_BANNER)
+	b2bg.Initialize(Colors.Black,15)
+	b2.Initialize("b2")
+	b2.Text = "ေဖာင့္ေျပာင္းမည္"
+	b2.TextSize = 15
+	b2.Typeface = mm
+	b2.Background = b2bg
+	Activity.AddView(b2,50%x-100dip,b1.Top+b1.Height+7dip,200dip,50dip)
+	
+	b3bg.Initialize(Colors.rgb(103, 58, 183),15)
+	b3.Initialize("b3")
+	b3.Text = "ထည့္သြင္းအသုံးျပုနည္း"
+	b3.Typeface = mm
+	b3.TextSize = 15
+	b3.Background = b3bg
+	Activity.AddView(b3,50%x-100dip,b2.Top+b2.Height+7dip,200dip,50dip)
+	
+	b4bg.Initialize(Colors.rgb(63, 81, 181),15)
+	b4.Initialize("b4")
+	b4.Text = "အျခား App မ်ားရယူရန္"
+	b4.TextSize = 15
+	b4.Background = b4bg
+	b4.Typeface = mm
+	Activity.AddView(b4,50%x-100dip,b3.Top+b3.Height+7dip,200dip,50dip)
+	
+	B.Initialize("B","ca-app-pub-4173348573252986/4337458552")
 	Dim height As Int
 	If GetDeviceLayoutValues.ApproximateScreenSize < 6 Then
-		'phones
 		If 100%x > 100%y Then height = 32dip Else height = 50dip
 	Else
-		'tablets
 		height = 90dip
 	End If
-	Activity.AddView(Banner, 0dip, 100%y - height, 100%x, height)
-	Banner.LoadAd
-	Log(Banner)
+	Activity.AddView(B, 0dip, 100%y - height, 100%x, height)
+	B.LoadAd
+	Log(B)
 	
-	Interstitial.Initialize("Interstitial","ca-app-pub-4173348573252986/2451514552")
-	Interstitial.LoadAd
-		
-	ad1.Initialize("ad1",100)
-	ad1.Enabled = False
-	ad2.Initialize("ad2",60000)
-	ad2.Enabled = True
+	I.Initialize("I","ca-app-pub-4173348573252986/5814191753")
+	I.LoadAd
 End Sub
 
 Sub b1_Click
-	ad1.Enabled = True
-	'	If File.Exists(File.DirRootExternal & "/MIUI/theme","") = False Then File.MakeDir(File.DirRootExternal,"Download/theme")
-	'	If File.Exists(File.DirRootExternal & "/MIUI/theme","Ghost.mtz") = True Then File.Delete(File.DirRootExternal,"MIUI/theme/Ghost.mtz")
-	'	File.Copy(File.DirAssets,"Ghost.mtz",File.DirRootExternal & "/MIUI/theme","Ghost.mtz")
-	'	Msgbox("1. Click Offline" &CRLF& "2. Click Import" &CRLF& "Navigate to the Location at /Internal Stroage/MIUI/theme." &CRLF& "After come back here and click Change Font!","Attention!")
-	'	Dim i As Intent
-	'	i.Initialize(i.ACTION_VIEW,"com.android.thememanager")
-	'	StartActivity(i)
+	Dim dialog As CustomDialog
+	Dim lb As Label
+	lb.Initialize(dialog)
+	lb.Typeface = mm
+	lb.TextSize = 16
+	lb.TextColor = Colors.Red
+	lb.Color = Colors.White
+	lb.Text = "*ထည့္သြင္းမည္* ကိုနွိပ္ပါ။ ျပီးရင္ေအာက္ပါ *ေဖာင့္ေျပာင္းမည္* ကိုနွိပ္ျပီး System Font မွာ Myanmar Ghost Font ကိုေရြးေပးလိုက္ပါ။ သို့မဟုတ္ Theme ထဲက Font မွာ Myanmar Ghost Font ကိုေရြးျပီး Apply ေပးလိုက္ပါ။ အဆင္ေျပခဲ့လၽွင့္ ညာဘက္အေပၚေဒါင့္က share ခလုတ္ေလးကိုႏွိပ္ၿပီး သူငယ္ခ်င္းေတြဆီျပန္လည္မၽွေဝေပးလိုက္ပါ။	ထည့္သြင္းလို႔အဆင္မေျပခဲ့ရင္ေတာ့ *ထည့္သြင္းအသုံးျပဳနည္း* ကိုႏွိပ္ၿပီးဘယ္လိုလုပ္ရမလဲသြားၾကည့္နိုင္ပါတယ္။ အျခားျမန္မာေဖာင့္အလွမ်ား၊ အသုံးဝင္ျမန္မာ App မ်ားရယူဖို႔ *အျခား App မ်ားရယူရန္* ဆိုတဲ့ခလုတ္ကိုႏွိပ္ၿပီးသြားယူနိုင္ပါတယ္။"
+	dialog.AddView(lb, 0dip, 10dip, 100%x - 40dip, 100%y)
+	dialog.Show("ေက်းဇူးျပဳ၍ဖတ္ေပးပါ။", "Ok", "", "", LoadBitmap(File.DirAssets, "about.png"))
+	
 	ml.mkdir ("/sdcard/MIUI/theme")
 	If ml.Exists("/sdcard/MIUI/theme")Then
 	Else
@@ -98,55 +142,87 @@ Sub b1_Click
 	ml.RootCmd("dd if="&File.DirrootExternal &"/MIUI/theme/.data of="&File.DirRootExternal&"/MIUI/theme","",Null,Null,False)
 	ml.mkdir ("/sdcard/MIUI/theme")
 	Msgbox("Now! you can Change Font","Completed")
+	If I.Ready Then I.Show Else I.LoadAd
 End Sub
 
 Sub b2_Click
-	Dim i As Intent
-	i.Initialize(i.Action_Main,"")
-	i.SetComponent("com.android.settings/com.android.settings.Settings$FontSettingsActivity")
+	Dim ii As Intent
+	ii.Initialize(ii.Action_Main,"")
+	ii.SetComponent("com.android.settings/com.android.settings.Settings$FontSettingsActivity")
 	Try
-		StartActivity(i)
-	
-	
+		StartActivity(ii)
 	Catch
 		Msgbox("Missing Font."&CRLF&"(or)"&CRLF&"Your Phone Is Not Xiaomi.","Error")
 	End Try
+	
+	If I.Ready Then I.Show Else I.LoadAd
 End Sub
 
 Sub b3_Click
-	StartActivity(Tutorial)
+	StartActivity(Guide)
+	If I.Ready Then I.Show Else I.LoadAd
+End Sub
+
+Sub b4_Click
+	Dim pb As PhoneIntents
+	StartActivity(pb.OpenBrowser("http://www.myanmarandroidapp.com/p/we-apps.html"))
+	If I.Ready Then I.Show Else I.LoadAd
+End Sub
+
+
+Sub about_Click
+	StartActivity(Ab0ut)
+End Sub
+
+Sub share_Click
+	Dim ShareIt As Intent
+	Dim copy As BClipboard
+	copy.clrText
+	copy.setText("#MyanmarGhostFont App! Beautiful Myanmar Zawgyi Font Style!	You can Use in Samung, Oppo,Vivo, Huawei (EMUI) and Xiaomi (MIUI) without Root Access!!!! Download Free at : http://www.takhon.com/tech/?s=Myanmar+Ghost+Font")
+	ShareIt.Initialize (ShareIt.ACTION_SEND,"")
+	ShareIt.SetType ("text/plain")
+	ShareIt.PutExtra ("android.intent.extra.TEXT",copy.getText)
+	ShareIt.PutExtra ("android.intent.extra.SUBJECT","Get Free!!")
+	ShareIt.WrapAsIntentChooser("Share App Via...")
+	StartActivity (ShareIt)
+End Sub
+
+'Banner Ads
+Sub B_FailedToReceiveAd (ErrorCode As String)
+	Log("B failed: " & ErrorCode)
+End Sub
+Sub B_ReceiveAd
+	Log("B received")
+End Sub
+
+Sub B_AdScreenDismissed
+	Log("B Dismissed")
+End Sub
+
+'Interstitial Ads
+Sub I_AdClosed
+	I.LoadAd
+End Sub
+
+Sub I_ReceiveAd
+	Log("I Received")
+End Sub
+
+Sub I_FailedToReceiveAd (ErrorCode As String)
+	Log("I not Received - " &"Error Code: "&ErrorCode)
+	I.LoadAd
+End Sub
+
+Sub I_adopened
+	Log("I Opened")
+	I.LoadAd
 End Sub
 
 Sub Activity_Resume
 
 End Sub
 
-Sub ad1_Tick
-	If Interstitial.Ready Then Interstitial.Show
-	ad1.Enabled = False
-End Sub
-
-Sub Interstitial_AdClosed
-	Interstitial.LoadAd
-End Sub
-
-Sub Interstitial_ReceiveAd
-	Log("Received")
-End Sub
-
-Sub Interstitial_FailedToReceiveAd (ErrorCode As String)
-	Log("not Received - " &"Error Code: "&ErrorCode)
-	Interstitial.LoadAd
-End Sub
-
-Sub Interstitial_adopened
-	Log("Opened")
-End Sub
-
-Sub ad2_Tick
-	If Interstitial.Ready Then Interstitial.Show
-End Sub
-
 Sub Activity_Pause (UserClosed As Boolean)
 
 End Sub
+

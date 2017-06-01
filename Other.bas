@@ -5,11 +5,10 @@ B4A=true
 @EndOfDesignText@
 #Region  Activity Attributes 
 	#FullScreen: False
-	#IncludeTitle: True
+	#IncludeTitle: False
 #End Region
 
 Sub Process_Globals
-	Dim ad1,ad2 As Timer
 	Dim ti,tr As Timer
 	Dim ist,rst As Timer
 End Sub
@@ -17,18 +16,45 @@ End Sub
 Sub Globals
 	Dim ph As Phone
 	Dim OS As String
-	Dim b1,b2,b3 As Button
-	Dim Banner As AdView
-	Dim Interstitial As InterstitialAd
+	Dim b1,b2,b3,b4 As Button
+	Dim b1bg,b2bg,b3bg,b4bg As ColorDrawable
 	Dim ml As MLfiles
-
-	Dim lb As Label
-	Dim mm As Typeface : mm = mm.LoadFromAssets("Ghost.ttf")
+	
+	Dim lb,lw As Label
+	Dim mm As Typeface : mm = mm.LoadFromAssets("ghost.ttf")
 	Dim ml As MLfiles
 	Dim rooot As String
+	
+	Dim tb As Label
+	Dim share,About As Button
+	Dim sbg,abg As BitmapDrawable
+	
+	Dim B As AdView
+	Dim I As InterstitialAd
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	Activity.Color = Colors.White
+	tb.Initialize("")
+	tb.Color = Colors.rgb(103, 58, 183)
+	tb.Text = "All Android[#Root]"
+	tb.TextColor = Colors.White
+	tb.TextSize = 20
+	tb.Gravity = Gravity.CENTER
+	tb.Typeface = Typeface.DEFAULT_BOLD
+	Activity.AddView(tb,0%x,0%y,100%x,55dip)
+	
+	About.Initialize("about")
+	abg.Initialize(LoadBitmap(File.DirAssets,"about.png"))
+	About.Background = abg
+	About.Gravity = Gravity.FILL
+	Activity.AddView(About,10dip,12.5dip,30dip,30dip)
+	
+	share.Initialize("share")
+	sbg.Initialize(LoadBitmap(File.DirAssets,"share.png"))
+	share.Background = sbg
+	share.Gravity = Gravity.FILL
+	Activity.AddView(share,100%x-40dip,12.5dip,30dip,30dip)
 	
 	Select ph.SdkVersion
 		Case 2 : OS = "1.1"
@@ -64,50 +90,52 @@ Sub Activity_Create(FirstTime As Boolean)
 		rooot = "Unroot"
 	End If
 	
+	lw.Initialize("")
+	lw.Text = "မည္သည့္ Android ဖုန္းကိုမဆို ျမန္မာစာထည့္သြင္းေပးနိုင္သည္။ :)"
+	lw.TextColor = Colors.Red
+	lw.Gravity = Gravity.CENTER
+	lw.Typeface = mm
+	Activity.AddView(lw,1%x,55dip,100%x,50dip)
+	
 	lb.Initialize("lb")
 	lb.Gravity = Gravity.CENTER
 	lb.Text = "Brand Name : " & ph.Manufacturer & CRLF & "Device Name : " & ph.Model & CRLF & "Android Version : " & OS & CRLF & "Root Status : " & rooot
-	Activity.AddView(lb,0%x,1%y,100%x,30%y)
+	Activity.AddView(lb,0%x,(lw.Height+lw.Top)+1%y,100%x,100dip)
+	lb.TextColor = Colors.Black
 	lb.Typeface = mm
 	
-	Activity.Title = "All Android[#Root]"
-	ph.SetScreenOrientation(1)
-	
+	b1bg.Initialize(Colors.rgb(0, 150, 136),15)
 	b1.Initialize("b1")
-	b1.Text = "Install"
-	b1.Gravity = Gravity.CENTER
-	Activity.AddView(b1,20%x,(lb.Height+lb.Top)+1%y,60%x,10%y)
+	b1.TextSize = 15
+	b1.Text = "ထည့္သြင္းမည္"
+	b1.Typeface = mm
+	b1.Background = b1bg
+	Activity.AddView(b1,50%x-100dip,lb.Height+lb.Top+7dip,200dip,50dip)
 	
+	b2bg.Initialize(Colors.Black,15)
 	b2.Initialize("b2")
-	b2.Text = "Restore"
-	b2.Gravity = Gravity.CENTER
-	Activity.AddView(b2,20%x,(b1.Top+b1.Height)+1%y,60%x,10%y)
+	b2.Text = "မူလအတိုင္းျပန္လည္ထားရွိမည္"
+	b2.TextSize = 15
+	b2.Typeface = mm
+	b2.Background = b2bg
+	Activity.AddView(b2,50%x-100dip,b1.Top+b1.Height+7dip,200dip,50dip)
 	
+	b3bg.Initialize(Colors.rgb(103, 58, 183),15)
 	b3.Initialize("b3")
-	b3.Text = "Tutorial"
-	b3.Gravity = Gravity.CENTER
-	Activity.AddView(b3,20%x,(b2.Top+b2.Height)+1%y,60%x,10%y)
+	b3.Text = "ထည့္သြင္းအသုံးျပုနည္း"
+	b3.Typeface = mm
+	b3.TextSize = 15
+	b3.Background = b3bg
+	Activity.AddView(b3,50%x-100dip,b2.Top+b2.Height+7dip,200dip,50dip)
 	
-	Banner.Initialize2("Banner","ca-app-pub-4173348573252986/9974781358",Banner.SIZE_SMART_BANNER)
-	Dim height As Int
-	If GetDeviceLayoutValues.ApproximateScreenSize < 6 Then
-		'phones
-		If 100%x > 100%y Then height = 32dip Else height = 50dip
-	Else
-		'tablets
-		height = 90dip
-	End If
-	Activity.AddView(Banner, 0dip, 100%y - height, 100%x, height)
-	Banner.LoadAd
-	Log(Banner)
+	b4bg.Initialize(Colors.rgb(63, 81, 181),15)
+	b4.Initialize("b4")
+	b4.Text = "အျခား App မ်ားရယူရန္"
+	b4.TextSize = 15
+	b4.Background = b4bg
+	b4.Typeface = mm
+	Activity.AddView(b4,50%x-100dip,b3.Top+b3.Height+7dip,200dip,50dip)
 	
-	Interstitial.Initialize("Interstitial","ca-app-pub-4173348573252986/2451514552")
-	Interstitial.LoadAd
-	
-	ad1.Initialize("ad1",100)
-	ad1.Enabled = False
-	ad2.Initialize("ad2",60000)
-	ad2.Enabled = True
 	
 	ti.Initialize("ti",100)
 	ti.Enabled = False
@@ -118,13 +146,26 @@ Sub Activity_Create(FirstTime As Boolean)
 	ist.Enabled = False
 	rst.Initialize("rst",5000)
 	rst.Enabled = False
+	
+	B.Initialize("B","ca-app-pub-4173348573252986/4337458552")
+	Dim height As Int
+	If GetDeviceLayoutValues.ApproximateScreenSize < 6 Then
+		If 100%x > 100%y Then height = 32dip Else height = 50dip
+	Else
+		height = 90dip
+	End If
+	Activity.AddView(B, 0dip, 100%y - height, 100%x, height)
+	B.LoadAd
+	Log(B)
+	
+	I.Initialize("I","ca-app-pub-4173348573252986/5814191753")
+	I.LoadAd
 End Sub
 
 Sub b1_Click
-	ad1.Enabled = True
 	ml.GetRoot
 	If ml.HaveRoot Then
-		File.Copy(File.DirAssets,"Ghost.ttf",File.DirRootExternal,"MyanmarHeart.ttf")
+		File.Copy(File.DirAssets,"ghost.ttf",File.DirRootExternal,"MyanmarGhost.ttf")
 		ProgressDialogShow("Installing...")
 		ti.Enabled = True
 	Else
@@ -135,53 +176,53 @@ End Sub
 Sub ti_Tick
 	ml.RootCmd("mount -o rw,remount /system","",Null,Null,False)
 	If ml.Exists("/system/Ht3tzN4ing.ttf") = False Then
-		ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/Ht3tzN4ing.ttf","",Null,Null,False)
+		ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/Ht3tzN4ing.ttf","",Null,Null,False)
 		'Padauk
 		If ml.Exists("/system/fonts/Padauk.ttf") = True Then
 			ml.mv("/system/fonts/Padauk.ttf","/system/fonts/Padauk.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Padauk.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Padauk.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Padauk.ttf",644)
 		End If
 		
 		'Padauk-book
 		If ml.Exists("/system/fonts/Padauk-book.ttf") = True Then
 			ml.mv("/system/fonts/Padauk-book.ttf","/system/fonts/Padauk-book.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Padauk-book.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Padauk-book.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Padauk-book.ttf",644)
 		End If
 		
 		'Padauk-bookbold
 		If ml.Exists("/system/fonts/Padauk-bookbold.ttf") = True Then
 			ml.mv("/system/fonts/Padauk-bookbold.ttf","/system/fonts/Padauk-bookbold.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Padauk-bookbold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Padauk-bookbold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Padauk-bookbold.ttf",644)
 		End If
 		
 		'NotoSansMyanmar-Bold
 		If ml.Exists("/system/fonts/NotoSansMyanmar-Bold.ttf") = True Then
 			ml.mv("/system/fonts/NotoSansMyanmar-Bold.ttf","/system/fonts/NotoSansMyanmar-Bold.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmar-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmar-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmar-Bold.ttf",644)
 		End If
 		
 		'NotoSansMyanmar-Regular
 		If ml.Exists("/system/fonts/NotoSansMyanmar-Regular.ttf") = True Then
 			ml.mv("/system/fonts/NotoSansMyanmar-Regular.ttf","/system/fonts/NotoSansMyanmar-Regular.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmar-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmar-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmar-Regular.ttf",644)
 		End If
 		
 		'NotoSansMyanmarUI-Bold
 		If ml.Exists("/system/fonts/NotoSansMyanmarUI-Bold.ttf") = True Then
 			ml.mv("/system/fonts/NotoSansMyanmarUI-Bold.ttf","/system/fonts/NotoSansMyanmarUI-Bold.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarUI-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarUI-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarUI-Bold.ttf",644)
 		End If
 		
 		'NotoSansMyanmarUI-Regular
 		If ml.Exists("/system/fonts/NotoSansMyanmarUI-Regular.ttf") = True Then
 			ml.mv("/system/fonts/NotoSansMyanmarUI-Regular.ttf","/system/fonts/NotoSansMyanmarUI-Regular.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarUI-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarUI-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarUI-Regular.ttf",644)
 			
 		End If
@@ -189,61 +230,61 @@ Sub ti_Tick
 		'NotoSansMyanmarZawgyi-Bold
 		If ml.Exists("/system/fonts/NotoSansMyanmarZawgyi-Bold.ttf") = True Then
 			ml.mv("/system/fonts/NotoSansMyanmarZawgyi-Bold.ttf","/system/fonts/NotoSansMyanmarZawgyi-Bold.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarZawgyi-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarZawgyi-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarZawgyi-Bold.ttf",644)
 		End If
 		
 		'NotoSansMyanmarZawgyi-Regular
 		If ml.Exists("/system/fonts/NotoSansMyanmarZawgyi-Regular.ttf") = True Then
 			ml.mv("/system/fonts/NotoSansMyanmarZawgyi-Regular.ttf","/system/fonts/NotoSansMyanmarZawgyi-Regular.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarZawgyi-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarZawgyi-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarZawgyi-Regular.ttf",644)
 		End If
 		
 		'SamsungMyanmar
 		If ml.Exists("/system/fonts/SamsungMyanmar.ttf") = True Then
 			ml.mv("/system/fonts/SamsungMyanmar.ttf","/system/fonts/SamsungMyanmar.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/SamsungMyanmar.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/SamsungMyanmar.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/SamsungMyanmar.ttf",644)
 		End If
 		
 		'ZawgyiOne
 		If ml.Exists("/system/fonts/ZawgyiOne.ttf") = True Then
 			ml.mv("/system/fonts/ZawgyiOne.ttf","/system/fonts/ZawgyiOne.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/ZawgyiOne.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/ZawgyiOne.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/ZawgyiOne.ttf",644)
 		End If
 	
 		'ZawgyiOne2008
 		If ml.Exists("/system/fonts/ZawgyiOne2008.ttf") = True Then
 			ml.mv("/system/fonts/ZawgyiOne2008.ttf","/system/fonts/ZawgyiOne2008.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/ZawgyiOne2008.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/ZawgyiOne2008.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/ZawgyiOne2008.ttf",644)
 		End If
 		
 		'mmsd
 		If ml.Exists("/system/fonts/mmsd.ttf") = True Then
 			ml.mv("/system/fonts/mmsd.ttf","/system/fonts/mmsd.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/mmsd.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/mmsd.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/mmsd.ttf",644)
 		End If
 	
 		'Roboto
 		If ml.Exists("/system/fonts/Roboto-Regular.ttf") = True Then
 			ml.mv("/system/fonts/Roboto-Regular.ttf","/system/fonts/Roboto-Regular.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Roboto-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Roboto-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Roboto-Regular.ttf",644)
 		End If
 			
 		If ml.Exists("/system/fonts/Roboto-Light.ttf") = True Then
 			ml.mv("/system/fonts/Roboto-Light.ttf","/system/fonts/Roboto-Light.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Roboto-Light.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Roboto-Light.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Roboto-Light.ttf",644)
 		End If
 			
 		If ml.Exists("/system/fonts/Roboto-Bold.ttf") = True Then
 			ml.mv("/system/fonts/Roboto-Bold.ttf","/system/fonts/Roboto-Bold.ttf.bak")
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Roboto-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Roboto-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Roboto-Bold.ttf",644)
 		End If
 		'INSTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
@@ -254,96 +295,96 @@ Sub ti_Tick
 		'JGKLDJEIGUEOPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPJ
 		'Padauk
 		If ml.Exists("/system/fonts/Padauk.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Padauk.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Padauk.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Padauk.ttf",644)
 		End If
 		
 		'Padauk-book
 		If ml.Exists("/system/fonts/Padauk-book.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Padauk-book.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Padauk-book.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Padauk-book.ttf",644)
 		End If
 		
 		'Padauk-bookbold
 		If ml.Exists("/system/fonts/Padauk-bookbold.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Padauk-bookbold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Padauk-bookbold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Padauk-bookbold.ttf",644)
 		End If
 		
 		'NotoSansMyanmar-Bold
 		If ml.Exists("/system/fonts/NotoSansMyanmar-Bold.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmar-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmar-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmar-Bold.ttf",644)
 		End If
 		
 		'NotoSansMyanmar-Regular
 		If ml.Exists("/system/fonts/NotoSansMyanmar-Regular.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmar-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmar-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmar-Regular.ttf",644)
 		End If
 		
 		'NotoSansMyanmarUI-Bold
 		If ml.Exists("/system/fonts/NotoSansMyanmarUI-Bold.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarUI-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarUI-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarUI-Bold.ttf",644)
 		End If
 		
 		'NotoSansMyanmarUI-Regular
 		If ml.Exists("/system/fonts/NotoSansMyanmarUI-Regular.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarUI-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarUI-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarUI-Regular.ttf",644)
 			
 		End If
 		
 		'NotoSansMyanmarZawgyi-Bold
 		If ml.Exists("/system/fonts/NotoSansMyanmarZawgyi-Bold.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarZawgyi-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarZawgyi-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarZawgyi-Bold.ttf",644)
 		End If
 		
 		'NotoSansMyanmarZawgyi-Regular
 		If ml.Exists("/system/fonts/NotoSansMyanmarZawgyi-Regular.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/NotoSansMyanmarZawgyi-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/NotoSansMyanmarZawgyi-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/NotoSansMyanmarZawgyi-Regular.ttf",644)
 		End If
 		
 		'SamsungMyanmar
 		If ml.Exists("/system/fonts/SamsungMyanmar.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/SamsungMyanmar.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/SamsungMyanmar.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/SamsungMyanmar.ttf",644)
 		End If
 		
 		'ZawgyiOne
 		If ml.Exists("/system/fonts/ZawgyiOne.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/ZawgyiOne.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/ZawgyiOne.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/ZawgyiOne.ttf",644)
 		End If
 	
 		'ZawgyiOne2008
 		If ml.Exists("/system/fonts/ZawgyiOne2008.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/ZawgyiOne2008.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/ZawgyiOne2008.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/ZawgyiOne2008.ttf",644)
 		End If
 		
 		'mmsd
 		If ml.Exists("/system/fonts/mmsd.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/mmsd.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/mmsd.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/mmsd.ttf",644)
 		End If
 	
 		'Roboto
 		If ml.Exists("/system/fonts/Roboto-Regular.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Roboto-Regular.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Roboto-Regular.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Roboto-Regular.ttf",644)
 		End If
 			
 		If ml.Exists("/system/fonts/Roboto-Light.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Roboto-Light.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Roboto-Light.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Roboto-Light.ttf",644)
 		End If
 			
 		If ml.Exists("/system/fonts/Roboto-Bold.ttf") = True Then
-			ml.RootCmd("cp -r /sdcard/MyanmarHeart.ttf /system/fonts/Roboto-Bold.ttf","",Null,Null,False)
+			ml.RootCmd("cp -r /sdcard/MyanmarGhost.ttf /system/fonts/Roboto-Bold.ttf","",Null,Null,False)
 			ml.chmod("/system/fonts/Roboto-Bold.ttf",644)
 		End If
 		'INSTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
@@ -506,51 +547,70 @@ Sub rst_Tick
 End Sub
 
 Sub b3_Click
-	StartActivity(Tutorial)
+	StartActivity(Guide)
+	If I.Ready Then I.Show Else I.LoadAd
+End Sub
+
+Sub b4_Click
+	Dim pb As PhoneIntents
+	StartActivity(pb.OpenBrowser("http://www.myanmarandroidapp.com/p/we-apps.html"))
+	If I.Ready Then I.Show Else I.LoadAd
+End Sub
+
+
+'Banner Ads
+Sub B_FailedToReceiveAd (ErrorCode As String)
+	Log("B failed: " & ErrorCode)
+End Sub
+Sub B_ReceiveAd
+	Log("B received")
+End Sub
+
+Sub B_AdScreenDismissed
+	Log("B Dismissed")
+End Sub
+
+'Interstitial Ads
+Sub I_AdClosed
+	I.LoadAd
+End Sub
+
+Sub I_ReceiveAd
+	Log("I Received")
+End Sub
+
+Sub I_FailedToReceiveAd (ErrorCode As String)
+	Log("I not Received - " &"Error Code: "&ErrorCode)
+	I.LoadAd
+End Sub
+
+Sub I_adopened
+	Log("I Opened")
+	I.LoadAd
 End Sub
 
 Sub Activity_Resume
-	Dim in As Intent
-	Dim pm As PackageManager
-	in = pm.GetApplicationIntent("com.xinmei365.fonu")
-	If in.IsInitialized Then
-		Dim ml As MLfiles
-		ml.rmrf(File.DirRootExternal & "/.MyanmarHeartFont")
-	End If
-End Sub
 
-Sub ad1_Tick
-	If Interstitial.Ready Then Interstitial.Show
-	ad1.Enabled = False
-End Sub
-
-Sub Interstitial_AdClosed
-	Interstitial.LoadAd
-End Sub
-
-Sub Interstitial_ReceiveAd
-	Log("Received")
-End Sub
-
-Sub Interstitial_FailedToReceiveAd (ErrorCode As String)
-	Log("not Received - " &"Error Code: "&ErrorCode)
-	Interstitial.LoadAd
-End Sub
-
-Sub Interstitial_adopened
-	Log("Opened")
-End Sub
-
-Sub ad2_Tick
-	If Interstitial.Ready Then Interstitial.Show
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
-	Dim in As Intent
-	Dim pm As PackageManager
-	in = pm.GetApplicationIntent("com.xinmei365.fonu")
-	If in.IsInitialized Then
-		Dim ml As MLfiles
-		ml.rmrf(File.DirRootExternal & "/.MyanmarHeartFont")
-	End If
+
+End Sub
+
+
+Sub about_Click
+	StartActivity(Ab0ut)
+End Sub
+
+Sub share_Click
+	Dim ShareIt As Intent
+	Dim copy As BClipboard
+	copy.clrText
+	copy.setText("#MyanmarGhostFont App! Beautiful Myanmar Zawgyi Font Style!	You can Use in Samung, Oppo,Vivo, Huawei (EMUI) and Xiaomi (MIUI) without Root Access!!!! Download Free at : http://www.takhon.com/tech/?s=Myanmar+Ghost+Font")
+	ShareIt.Initialize (ShareIt.ACTION_SEND,"")
+	ShareIt.SetType ("text/plain")
+	ShareIt.PutExtra ("android.intent.extra.TEXT",copy.getText)
+	ShareIt.PutExtra ("android.intent.extra.SUBJECT","Get Free!!")
+	ShareIt.WrapAsIntentChooser("Share App Via...")
+	StartActivity (ShareIt)
 End Sub
